@@ -10,12 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Font: Cairo -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- Firebase SDK (v8 Compatible) -->
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-    <!-- Firebase Config File -->
-    <script src="firebase-config.js"></script>
 
     <style>
         body { font-family: 'Cairo', sans-serif; }
@@ -55,15 +49,14 @@
         <div class="flex flex-col md:flex-row gap-4 justify-between items-center bg-slate-900 p-4 rounded-xl border border-slate-800">
             <div class="relative w-full md:w-80">
                 <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                <input type="text" id="searchInput" oninput="filterData()" placeholder="ابحث عن نسخة..." class="w-full bg-slate-950 border border-slate-800 rounded-lg py-2 pr-10 pl-4 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+                <input type="text" id="searchInput" placeholder="ابحث عن نسخة..." class="w-full bg-slate-950 border border-slate-800 rounded-lg py-2 pr-10 pl-4 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
             </div>
 
             <div class="flex flex-wrap gap-2 w-full md:w-auto">
-                <button onclick="filterCategory('all')" class="cat-btn active bg-blue-600 text-white px-4 py-1.5 rounded-lg text-xs font-semibold">الكل</button>
-                <button onclick="filterCategory('Windows 11')" class="cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-1.5 rounded-lg text-xs font-semibold">Windows 11</button>
-                <button onclick="filterCategory('Windows 10')" class="cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-1.5 rounded-lg text-xs font-semibold">Windows 10</button>
-                <button onclick="filterCategory('Windows 7')" class="cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-1.5 rounded-lg text-xs font-semibold">Windows 7</button>
-                <button onclick="filterCategory('Windows Server')" class="cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-1.5 rounded-lg text-xs font-semibold">Server</button>
+                <button data-cat="all" class="cat-btn active bg-blue-600 text-white px-4 py-1.5 rounded-lg text-xs font-semibold">الكل</button>
+                <button data-cat="Windows 11" class="cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-1.5 rounded-lg text-xs font-semibold">Windows 11</button>
+                <button data-cat="Windows 10" class="cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-1.5 rounded-lg text-xs font-semibold">Windows 10</button>
+                <button data-cat="Windows 7" class="cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-1.5 rounded-lg text-xs font-semibold">Windows 7</button>
             </div>
         </div>
 
@@ -82,12 +75,17 @@
     </footer>
 
     <!-- Logic Script -->
-    <script>
+    <script type="module">
+        import { db, ref, onValue } from './firebase-config.js';
+
         let allVersions = [];
         let activeCategory = 'all';
 
-        // الاستماع للبيانات حياً من Firebase Realtime Database
-        db.ref('windows_versions').on('value', (snapshot) => {
+        const container = document.getElementById('versionsContainer');
+        const searchInput = document.getElementById('searchInput');
+
+        // قراءة البيانات من المسار الموحد 'windows'
+        onValue(ref(db, 'windows'), (snapshot) => {
             const data = snapshot.val();
             allVersions = [];
             
@@ -99,29 +97,27 @@
             renderCards();
         });
 
-        function filterCategory(cat) {
-            activeCategory = cat;
-            document.querySelectorAll('.cat-btn').forEach(btn => {
-                if(btn.innerText === cat || (cat === 'all' && btn.innerText === 'الكل')) {
-                    btn.className = "cat-btn active bg-blue-600 text-white px-4 py-1.5 rounded-lg text-xs font-semibold";
-                } else {
-                    btn.className = "cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-1.5 rounded-lg text-xs font-semibold";
-                }
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                activeCategory = e.target.getAttribute('data-cat');
+                document.querySelectorAll('.cat-btn').forEach(b => {
+                    b.className = "cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-1.5 rounded-lg text-xs font-semibold";
+                });
+                e.target.className = "cat-btn active bg-blue-600 text-white px-4 py-1.5 rounded-lg text-xs font-semibold";
+                renderCards();
             });
-            renderCards();
-        }
+        });
 
-        function filterData() {
-            renderCards();
-        }
+        searchInput.addEventListener('input', renderCards);
 
         function renderCards() {
-            const container = document.getElementById('versionsContainer');
-            const search = document.getElementById('searchInput').value.toLowerCase();
+            const search = searchInput.value.toLowerCase();
 
             const filtered = allVersions.filter(item => {
-                const matchCat = activeCategory === 'all' || item.category === activeCategory;
-                const matchSearch = item.title.toLowerCase().includes(search) || (item.desc && item.desc.toLowerCase().includes(search));
+                const title = item.name ? item.name.toLowerCase() : '';
+                const desc = item.desc ? item.desc.toLowerCase() : '';
+                const matchCat = activeCategory === 'all' || title.includes(activeCategory.toLowerCase());
+                const matchSearch = title.includes(search) || desc.includes(search);
                 return matchCat && matchSearch;
             });
 
@@ -140,32 +136,21 @@
                     <div>
                         <div class="flex items-center justify-between mb-3">
                             <span class="text-xs bg-slate-800 text-blue-400 border border-slate-700 px-3 py-1 rounded-full font-bold">
-                                ${item.category}
+                                ${item.arch || 'x64'}
                             </span>
                             <span class="text-xs text-slate-400">
-                                <i class="fa-solid fa-hard-drive ml-1"></i>${item.size}
+                                <i class="fa-solid fa-hard-drive ml-1"></i>${item.size || 'غير محدد'}
                             </span>
                         </div>
                         
-                        <h3 class="text-lg font-bold text-white mb-2">${item.title}</h3>
+                        <h3 class="text-lg font-bold text-white mb-2">${item.name}</h3>
                         <p class="text-xs text-slate-400 leading-relaxed mb-4 line-clamp-2">${item.desc || 'نسخة ويندوز رسمية أصلية.'}</p>
-                        
-                        <div class="mb-4">
-                            <span class="text-[11px] bg-slate-950 text-slate-300 px-2.5 py-1 rounded border border-slate-800">
-                                النواة: ${item.arch}
-                            </span>
-                        </div>
                     </div>
 
                     <div class="space-y-2 pt-4 border-t border-slate-800">
-                        <a href="${item.mainUrl}" target="_blank" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition">
+                        <a href="${item.url}" target="_blank" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition">
                             <i class="fa-solid fa-download"></i> رابط تحميل مباشر ISO
                         </a>
-                        ${item.mirrorUrl ? `
-                            <a href="${item.mirrorUrl}" target="_blank" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-1.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition">
-                                <i class="fa-solid fa-link"></i> سيرفر بديل
-                            </a>
-                        ` : ''}
                     </div>
                 </div>
             `).join('');
