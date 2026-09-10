@@ -5,7 +5,7 @@ import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from
 const firebaseConfig = {
   apiKey: "AIzaSyA-IlJUAbKBzCsMsqsDnu4j2SaJGosR4Hs",
   authDomain: "windows-d031e.firebaseapp.com",
-  databaseURL: "https://windowsdow-17b3f-default-rtdb.firebaseio.com/",
+  databaseURL: "https://windows-d031e-default-rtdb.firebaseio.com/",
   projectId: "windows-d031e",
   storageBucket: "windows-d031e.firebasestorage.app",
   messagingSenderId: "874765961451",
