@@ -3,736 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مركز تحميل نسخ الويندوز | Windows ISO Hub</title>
-    <!-- Tailwind CSS CDN -->
+    <title>مركز تحميل نسخ الويندوز</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome CDN -->
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Cairo -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Google Font: Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
     
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        win: {
-                            bg: '#0f172a',
-                            card: '#1e293b',
-                            accent: '#0078d4',
-                            hover: '#106ebe',
-                            light: '#38bdf8'
-                        }
-                    },
-                    fontFamily: {
-                        cairo: ['Cairo', 'sans-serif']
-                    }
-                }
-            }
-        }
-    </script>
+    <!-- Firebase SDK (v8 Compatible) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- Firebase Config File -->
+    <script src="firebase-config.js"></script>
+
     <style>
-        body {
-            font-family: 'Cairo', sans-serif;
-            background-color: #0b0f19;
-            color: #f1f5f9;
-        }
-        /* Glassmorphism Effect */
-        .glass {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-        .glass-card {
-            background: rgba(30, 41, 59, 0.5);
-            backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-        }
-        .glass-card:hover {
-            border-color: rgba(56, 189, 248, 0.4);
-            transform: translateY(-4px);
-            box-shadow: 0 10px 25px -5px rgba(0, 120, 212, 0.25);
-        }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0f172a;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #334155;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #0078d4;
-        }
+        body { font-family: 'Cairo', sans-serif; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-win-accent selection:text-white">
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between">
 
-    <!-- Navigation Bar -->
-    <header class="sticky top-0 z-50 glass border-b border-slate-800">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <!-- Logo -->
-                <div class="flex items-center space-x-3 space-x-reverse cursor-pointer" onclick="switchTab('home')">
-                    <div class="w-10 h-10 rounded-lg bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                        <i class="fa-brands fa-windows text-2xl text-white"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-bold tracking-wide bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">تنزيلات الويندوز</h1>
-                        <p class="text-xs text-slate-400">المرجع السريع لنسخ ISO الرسمية</p>
-                    </div>
+    <!-- Header Navigation -->
+    <header class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-xl shadow-lg shadow-blue-500/30">
+                    <i class="fa-brands fa-windows text-white"></i>
                 </div>
-
-                <!-- Nav Buttons -->
-                <nav class="flex items-center space-x-2 space-x-reverse bg-slate-900/60 p-1.5 rounded-xl border border-slate-800">
-                    <button id="nav-home" onclick="switchTab('home')" class="px-5 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-win-accent text-white shadow-md">
-                        <i class="fa-solid fa-house ml-2"></i>الرئيسية
-                    </button>
-                    <button id="nav-admin" onclick="switchTab('admin')" class="px-5 py-2 rounded-lg font-semibold text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-all duration-200">
-                        <i class="fa-solid fa-user-gear ml-2"></i>لوحة التحكم
-                    </button>
-                </nav>
+                <div>
+                    <h1 class="text-xl font-bold text-white">مكتبة الويندوز</h1>
+                    <p class="text-xs text-slate-400">روابط سريعة ومباشرة 100%</p>
+                </div>
             </div>
+            <a href="admin.html" class="text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg border border-slate-700 transition">
+                <i class="fa-solid fa-lock ml-1 text-blue-400"></i> لوحة التحكم
+            </a>
         </div>
     </header>
 
-    <!-- Main Content Area -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-grow w-full">
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-grow w-full space-y-8">
+        <!-- Hero Section -->
+        <div class="bg-gradient-to-r from-blue-900/40 via-slate-900 to-slate-900 p-8 rounded-2xl border border-blue-500/20 shadow-xl">
+            <h2 class="text-3xl font-extrabold text-white mb-2">حمل أحدث نسخ الويندوز الأصلية</h2>
+            <p class="text-slate-400 text-sm max-w-2xl">
+                مجموعات محدثة ومباشرة من روابط نسخ Windows 11, 10, 7 وسيرفرات بجميع المعماريات.
+            </p>
+        </div>
 
-        <!-- TAB 1: HOME / DOWNLOADS VIEW -->
-        <section id="tab-home" class="space-y-8">
-            <!-- Hero Banner -->
-            <div class="relative overflow-hidden rounded-2xl glass p-8 sm:p-12 border border-slate-800">
-                <div class="absolute -right-10 -bottom-10 w-80 h-80 bg-blue-600/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="relative z-10 max-w-2xl">
-                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-win-light border border-blue-500/20 mb-4">
-                        <i class="fa-solid fa-shield-halved ml-1.5"></i>روابط مباشرة وآمنة 100%
-                    </span>
-                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white mb-4 leading-tight">
-                        تحميل كافة نسخ الويندوز الأصلية بصيغة ISO
-                    </h2>
-                    <p class="text-slate-400 text-base leading-relaxed mb-6">
-                        نوفر لك أحدث وأسرع سيرفرات التحميل المباشر لنسخ ويندوز 11، 10، 7 وسيرفر بمختلف النواة والمعماريات.
-                    </p>
-                </div>
+        <!-- Filter & Search Bar -->
+        <div class="flex flex-col md:flex-row gap-4 justify-between items-center bg-slate-900 p-4 rounded-xl border border-slate-800">
+            <div class="relative w-full md:w-80">
+                <i class="fa-solid fa-magnifying-glass absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <input type="text" id="searchInput" oninput="filterData()" placeholder="ابحث عن نسخة..." class="w-full bg-slate-950 border border-slate-800 rounded-lg py-2 pr-10 pl-4 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
             </div>
 
-            <!-- Search and Filter Bar -->
-            <div class="flex flex-col md:flex-row gap-4 items-center justify-between glass p-4 rounded-xl">
-                <!-- Search Box -->
-                <div class="relative w-full md:w-96">
-                    <i class="fa-solid fa-magnifying-glass absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                    <input type="text" id="searchInput" oninput="filterVersions()" placeholder="ابحث عن نسخة ويندوز..." class="w-full bg-slate-900/80 border border-slate-700/80 rounded-lg py-2.5 pr-11 pl-4 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-win-accent transition">
-                </div>
-
-                <!-- Category Filters -->
-                <div class="flex flex-wrap gap-2 w-full md:w-auto">
-                    <button onclick="setCategoryFilter('all')" class="cat-btn active bg-win-accent text-white px-4 py-2 rounded-lg text-sm font-semibold transition">الكل</button>
-                    <button onclick="setCategoryFilter('Windows 11')" class="cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-lg text-sm font-semibold transition">Windows 11</button>
-                    <button onclick="setCategoryFilter('Windows 10')" class="cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-lg text-sm font-semibold transition">Windows 10</button>
-                    <button onclick="setCategoryFilter('Windows 7')" class="cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-lg text-sm font-semibold transition">Windows 7</button>
-                    <button onclick="setCategoryFilter('Windows Server')" class="cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-lg text-sm font-semibold transition">Windows Server</button>
-                </div>
+            <div class="flex flex-wrap gap-2 w-full md:w-auto">
+                <button onclick="filterCategory('all')" class="cat-btn active bg-blue-600 text-white px-4 py-1.5 rounded-lg text-xs font-semibold">الكل</button>
+                <button onclick="filterCategory('Windows 11')" class="cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-1.5 rounded-lg text-xs font-semibold">Windows 11</button>
+                <button onclick="filterCategory('Windows 10')" class="cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-1.5 rounded-lg text-xs font-semibold">Windows 10</button>
+                <button onclick="filterCategory('Windows 7')" class="cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-1.5 rounded-lg text-xs font-semibold">Windows 7</button>
+                <button onclick="filterCategory('Windows Server')" class="cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-1.5 rounded-lg text-xs font-semibold">Server</button>
             </div>
+        </div>
 
-            <!-- Download Cards Grid -->
-            <div id="versionsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Dynamic cards will be rendered here via JS -->
+        <!-- Dynamic Grid of Cards -->
+        <div id="versionsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="col-span-full text-center py-12 text-slate-500">
+                <i class="fa-solid fa-spinner fa-spin text-3xl mb-3 text-blue-500"></i>
+                <p>جاري تحميل النسخ المتاحة من Firebase...</p>
             </div>
-
-            <!-- Empty State Message -->
-            <div id="noResults" class="hidden text-center py-16 glass rounded-2xl">
-                <i class="fa-solid fa-box-open text-5xl text-slate-600 mb-3"></i>
-                <h3 class="text-lg font-bold text-slate-300">لم يتم العثور على أي نتائج</h3>
-                <p class="text-sm text-slate-500 mt-1">جرّب تغيير كلمات البحث أو خيارات التصفية.</p>
-            </div>
-        </section>
-
-        <!-- TAB 2: ADMIN PANEL VIEW -->
-        <section id="tab-admin" class="hidden space-y-8">
-            
-            <!-- Auth Overlay Modal (If Not Authenticated) -->
-            <div id="adminAuthModal" class="glass p-8 rounded-2xl max-w-md mx-auto text-center border border-slate-700/50 shadow-2xl my-12">
-                <div class="w-16 h-16 bg-blue-600/20 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-500/30">
-                    <i class="fa-solid fa-lock text-2xl text-win-light"></i>
-                </div>
-                <h2 class="text-2xl font-bold text-white mb-2">تسجيل دخول المشرف</h2>
-                <p class="text-slate-400 text-sm mb-6">أدخل كلمة المرور للوصول إلى لوحة التحكم وإدارة النسخ</p>
-                <div class="space-y-4">
-                    <div>
-                        <input type="password" id="adminPassword" placeholder="كلمة المرور (الافتراضية: admin)" class="w-full bg-slate-900 border border-slate-700 rounded-lg py-2.5 px-4 text-center text-sm focus:outline-none focus:border-win-accent text-white">
-                        <p id="authError" class="text-red-400 text-xs mt-2 hidden"><i class="fa-solid fa-circle-exclamation ml-1"></i>كلمة المرور غير صحيحة!</p>
-                    </div>
-                    <button onclick="checkAdminAuth()" class="w-full bg-win-accent hover:bg-win-hover text-white py-2.5 rounded-lg font-bold text-sm shadow-lg transition">
-                        دخول لوحة التحكم
-                    </button>
-                </div>
-            </div>
-
-            <!-- Dashboard Content (Hidden until authenticated) -->
-            <div id="adminDashboard" class="hidden space-y-8">
-                <!-- Admin Header & Logout -->
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center glass p-6 rounded-2xl gap-4">
-                    <div>
-                        <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-gauge-high text-win-light"></i> لوحة تحكم إدارة النسخ
-                        </h2>
-                        <p class="text-slate-400 text-sm mt-1">إضافة، تعديل وإدارة روابط التحميل المباشرة والبديلة</p>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <button onclick="openAddModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded-lg font-semibold text-sm flex items-center gap-2 shadow-lg transition">
-                            <i class="fa-solid fa-plus"></i> إضافة نسخة جديدة
-                        </button>
-                        <button onclick="adminLogout()" class="bg-rose-900/40 hover:bg-rose-900/60 text-rose-300 border border-rose-700/50 px-4 py-2 rounded-lg font-semibold text-sm transition">
-                            تسجيل خروج
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Quick Stats Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                    <div class="glass p-5 rounded-xl flex items-center justify-between border-r-4 border-r-blue-500">
-                        <div>
-                            <p class="text-slate-400 text-xs font-semibold uppercase">إجمالي النسخ</p>
-                            <h3 id="statTotalVersions" class="text-3xl font-extrabold text-white mt-1">0</h3>
-                        </div>
-                        <div class="w-12 h-12 bg-blue-500/10 rounded-lg flex items-center justify-center text-win-light text-xl">
-                            <i class="fa-solid fa-compact-disc"></i>
-                        </div>
-                    </div>
-                    <div class="glass p-5 rounded-xl flex items-center justify-between border-r-4 border-r-emerald-500">
-                        <div>
-                            <p class="text-slate-400 text-xs font-semibold uppercase">إجمالي التحميلات</p>
-                            <h3 id="statTotalDownloads" class="text-3xl font-extrabold text-white mt-1">0</h3>
-                        </div>
-                        <div class="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center text-emerald-400 text-xl">
-                            <i class="fa-solid fa-download"></i>
-                        </div>
-                    </div>
-                    <div class="glass p-5 rounded-xl flex items-center justify-between border-r-4 border-r-cyan-500">
-                        <div>
-                            <p class="text-slate-400 text-xs font-semibold uppercase">الروابط النشطة</p>
-                            <h3 id="statActiveLinks" class="text-3xl font-extrabold text-white mt-1">0</h3>
-                        </div>
-                        <div class="w-12 h-12 bg-cyan-500/10 rounded-lg flex items-center justify-center text-cyan-400 text-xl">
-                            <i class="fa-solid fa-link"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Admin Management Table -->
-                <div class="glass rounded-2xl overflow-hidden border border-slate-800">
-                    <div class="p-5 border-b border-slate-800 flex justify-between items-center">
-                        <h3 class="font-bold text-slate-200">قائمة نسخ الويندوز المتاحة</h3>
-                        <span class="text-xs text-slate-400">يمكنك تعديل وتحديث السيرفرات في أي وقت</span>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-right text-sm">
-                            <thead class="bg-slate-900/80 text-slate-400 uppercase text-xs">
-                                <tr>
-                                    <th class="py-3.5 px-4">اسم النسخة</th>
-                                    <th class="py-3.5 px-4">الفئة</th>
-                                    <th class="py-3.5 px-4">النواة</th>
-                                    <th class="py-3.5 px-4">الحجم</th>
-                                    <th class="py-3.5 px-4">التحميلات</th>
-                                    <th class="py-3.5 px-4">الحالة</th>
-                                    <th class="py-3.5 px-4 text-center">الإجراءات</th>
-                                </tr>
-                            </thead>
-                            <tbody id="adminTableBody" class="divide-y divide-slate-800 text-slate-300">
-                                <!-- Dynamic Rows -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </section>
+        </div>
     </main>
 
-    <!-- Add / Edit Version Modal -->
-    <div id="versionModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="glass bg-slate-900/95 rounded-2xl max-w-xl w-full p-6 border border-slate-700 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModal()" class="absolute top-4 left-4 text-slate-400 hover:text-white text-lg">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-            <h3 id="modalTitle" class="text-xl font-bold text-white mb-6 border-b border-slate-800 pb-3">إضافة نسخة جديدة</h3>
-            
-            <form id="versionForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
-                <input type="hidden" id="editId">
-                
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">اسم النسخة والإصدار</label>
-                    <input type="text" id="formTitle" required placeholder="مثال: Windows 11 Pro 23H2" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-win-accent">
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">نوع الويندوز</label>
-                        <select id="formCategory" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-win-accent">
-                            <option value="Windows 11">Windows 11</option>
-                            <option value="Windows 10">Windows 10</option>
-                            <option value="Windows 7">Windows 7</option>
-                            <option value="Windows Server">Windows Server</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">المعمارية (النواة)</label>
-                        <select id="formArch" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-win-accent">
-                            <option value="x64 (64-bit)">x64 (64-bit)</option>
-                            <option value="x86 (32-bit)">x86 (32-bit)</option>
-                            <option value="ARM64">ARM64</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-slate-400 mb-1">حجم الملف</label>
-                        <input type="text" id="formSize" required placeholder="مثال: 5.4 GB" class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-win-accent">
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">الوصف ومتطلبات التشغيل</label>
-                    <textarea id="formDesc" rows="3" placeholder="اكتب وصفاً قصيراً للنسخة..." class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-win-accent"></textarea>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">رابط التحميل المباشر الرئيسي (ISO)</label>
-                    <input type="url" id="formMainUrl" required placeholder="https://..." class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-win-accent" dir="ltr">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-slate-400 mb-1">رابط سيرفر بديل (Mirror Link)</label>
-                    <input type="url" id="formMirrorUrl" placeholder="https://..." class="w-full bg-slate-800 border border-slate-700 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-win-accent" dir="ltr">
-                </div>
-
-                <div class="flex items-center gap-2 pt-2">
-                    <input type="checkbox" id="formActive" checked class="w-4 h-4 accent-win-accent rounded">
-                    <label for="formActive" class="text-sm text-slate-300">الرابط فعال وقابل للتحميل</label>
-                </div>
-
-                <div class="flex justify-end gap-3 pt-4 border-t border-slate-800">
-                    <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-lg text-sm font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 transition">إلغاء</button>
-                    <button type="submit" class="px-5 py-2 rounded-lg text-sm font-semibold bg-win-accent hover:bg-win-hover text-white shadow-lg transition">حفظ البيانات</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-5 left-5 z-50 translate-y-20 opacity-0 transition-all duration-300 glass bg-slate-900 border border-win-accent text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3">
-        <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
-        <span id="toastMessage" class="text-sm font-medium">تمت العملية بنجاح!</span>
-    </div>
-
     <!-- Footer -->
-    <footer class="border-t border-slate-800 bg-slate-950 py-6 mt-12 text-center text-slate-500 text-xs">
-        <div class="max-w-7xl mx-auto px-4">
-            <p>جميع الحقوق محفوظة &copy; 2026 - موقع تحميل نسخ الويندوز السريع</p>
-        </div>
+    <footer class="border-t border-slate-900 py-6 text-center text-xs text-slate-500">
+        جميع الحقوق محفوظة &copy; 2026 - تحميل نسخ الويندوز
     </footer>
 
+    <!-- Logic Script -->
     <script>
-        // Sample Initial Windows Data
-        const defaultVersions = [
-            {
-                id: 1,
-                title: "Windows 11 Pro 23H2 Original",
-                category: "Windows 11",
-                arch: "x64 (64-bit)",
-                size: "6.2 GB",
-                desc: "النسخة الرسمية الكاملة من مايكروسوفت مع كامل التحديثات والواجهة الحديثة والتحسينات للألعاب.",
-                mainUrl: "https://software-static.download.prss.microsoft.com/db_files/Win11_23H2_Arabic_x64v2.iso",
-                mirrorUrl: "https://drive.google.com/uc?export=download&id=sample_win11",
-                downloads: 1420,
-                active: true,
-                date: "2024-01-15"
-            },
-            {
-                id: 2,
-                title: "Windows 10 Pro 22H2 Build",
-                category: "Windows 10",
-                arch: "x64 (64-bit)",
-                size: "5.7 GB",
-                desc: "نسخة ويندوز 10 المستقرة مع الدعم الممتد، متوافقة مع كافة الأجهزة والبرامج والألعاب القديمة والحديثة.",
-                mainUrl: "https://software-static.download.prss.microsoft.com/db_files/Win10_22H2_Arabic_x64.iso",
-                mirrorUrl: "https://mega.nz/file/sample_win10",
-                downloads: 3890,
-                active: true,
-                date: "2023-11-20"
-            },
-            {
-                id: 3,
-                title: "Windows 7 Ultimate SP1",
-                category: "Windows 7",
-                arch: "x86 (32-bit)",
-                size: "3.1 GB",
-                desc: "النسخة الخفيفة الشهيرة التيميت الحزمة الخدمية الأولى مخصصة للأجهزة ذات المواصفات الضعيفة.",
-                mainUrl: "https://archive.org/download/win7-sp1-arabic/win7_sp1_x86.iso",
-                mirrorUrl: "",
-                downloads: 850,
-                active: true,
-                date: "2022-05-10"
+        let allVersions = [];
+        let activeCategory = 'all';
+
+        // الاستماع للبيانات حياً من Firebase Realtime Database
+        db.ref('windows_versions').on('value', (snapshot) => {
+            const data = snapshot.val();
+            allVersions = [];
+            
+            if (data) {
+                Object.keys(data).forEach(key => {
+                    allVersions.push({ id: key, ...data[key] });
+                });
             }
-        ];
-
-        // State Management
-        let versions = [];
-        let currentFilter = 'all';
-        let isAdminLoggedIn = false;
-
-        // Initialize App
-        window.addEventListener('DOMContentLoaded', () => {
-            loadData();
             renderCards();
-            updateStats();
         });
 
-        // Load Data from LocalStorage or Defaults
-        function loadData() {
-            const stored = localStorage.getItem('win_versions_data');
-            if (stored) {
-                try {
-                    versions = JSON.parse(stored);
-                } catch (e) {
-                    versions = defaultVersions;
-                }
-            } else {
-                versions = defaultVersions;
-                saveData();
-            }
-        }
-
-        // Save Data to LocalStorage
-        function saveData() {
-            localStorage.setItem('win_versions_data', JSON.stringify(versions));
-            updateStats();
-        }
-
-        // Switch Tabs (Home vs Admin)
-        function switchTab(tab) {
-            const homeTab = document.getElementById('tab-home');
-            const adminTab = document.getElementById('tab-admin');
-            const navHome = document.getElementById('nav-home');
-            const navAdmin = document.getElementById('nav-admin');
-
-            if (tab === 'home') {
-                homeTab.classList.remove('hidden');
-                adminTab.classList.add('hidden');
-                
-                navHome.className = "px-5 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-win-accent text-white shadow-md";
-                navAdmin.className = "px-5 py-2 rounded-lg font-semibold text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-all duration-200";
-                renderCards();
-            } else {
-                homeTab.classList.add('hidden');
-                adminTab.classList.remove('hidden');
-
-                navAdmin.className = "px-5 py-2 rounded-lg font-semibold text-sm transition-all duration-200 bg-win-accent text-white shadow-md";
-                navHome.className = "px-5 py-2 rounded-lg font-semibold text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-all duration-200";
-                
-                if (isAdminLoggedIn) {
-                    renderAdminTable();
-                }
-            }
-        }
-
-        // Filter Categories
-        function setCategoryFilter(category) {
-            currentFilter = category;
+        function filterCategory(cat) {
+            activeCategory = cat;
             document.querySelectorAll('.cat-btn').forEach(btn => {
-                if (btn.innerText === category || (category === 'all' && btn.innerText === 'الكل')) {
-                    btn.className = "cat-btn active bg-win-accent text-white px-4 py-2 rounded-lg text-sm font-semibold transition";
+                if(btn.innerText === cat || (cat === 'all' && btn.innerText === 'الكل')) {
+                    btn.className = "cat-btn active bg-blue-600 text-white px-4 py-1.5 rounded-lg text-xs font-semibold";
                 } else {
-                    btn.className = "cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-2 rounded-lg text-sm font-semibold transition";
+                    btn.className = "cat-btn bg-slate-800 text-slate-300 hover:bg-slate-700 px-4 py-1.5 rounded-lg text-xs font-semibold";
                 }
             });
-            filterVersions();
+            renderCards();
         }
 
-        // Render Public Download Cards
+        function filterData() {
+            renderCards();
+        }
+
         function renderCards() {
-            const grid = document.getElementById('versionsGrid');
-            const noResults = document.getElementById('noResults');
-            const searchVal = document.getElementById('searchInput').value.toLowerCase().trim();
+            const container = document.getElementById('versionsContainer');
+            const search = document.getElementById('searchInput').value.toLowerCase();
 
-            grid.innerHTML = '';
-
-            const filtered = versions.filter(item => {
-                const matchesCat = currentFilter === 'all' || item.category === currentFilter;
-                const matchesSearch = item.title.toLowerCase().includes(searchVal) || item.desc.toLowerCase().includes(searchVal);
-                return matchesCat && matchesSearch;
+            const filtered = allVersions.filter(item => {
+                const matchCat = activeCategory === 'all' || item.category === activeCategory;
+                const matchSearch = item.title.toLowerCase().includes(search) || (item.desc && item.desc.toLowerCase().includes(search));
+                return matchCat && matchSearch;
             });
 
             if (filtered.length === 0) {
-                noResults.classList.remove('hidden');
-            } else {
-                noResults.classList.add('hidden');
-                filtered.forEach(item => {
-                    const card = document.createElement('div');
-                    card.className = "glass-card rounded-2xl p-6 flex flex-col justify-between border border-slate-800";
-                    
-                    // Windows Icon Based on Category
-                    let iconClass = "fa-brands fa-windows text-win-light";
-                    if(item.category === "Windows 11") iconClass = "fa-brands fa-windows text-cyan-400";
-                    if(item.category === "Windows 7") iconClass = "fa-brands fa-windows text-blue-400";
-                    if(item.category === "Windows Server") iconClass = "fa-solid fa-server text-emerald-400";
-
-                    card.innerHTML = `
-                        <div>
-                            <div class="flex items-center justify-between mb-4">
-                                <span class="text-xs font-bold px-3 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
-                                    ${item.category}
-                                </span>
-                                <span class="text-xs text-slate-400 flex items-center gap-1">
-                                    <i class="fa-solid fa-download text-win-light"></i> ${item.downloads.toLocaleString()} تحميل
-                                </span>
-                            </div>
-
-                            <div class="flex items-start gap-3 mb-3">
-                                <div class="w-10 h-10 rounded-lg bg-slate-800/80 flex items-center justify-center text-xl shrink-0 border border-slate-700">
-                                    <i class="${iconClass}"></i>
-                                </div>
-                                <h3 class="text-lg font-bold text-white leading-snug">${escapeHtml(item.title)}</h3>
-                            </div>
-
-                            <p class="text-xs text-slate-400 leading-relaxed mb-4 line-clamp-2">${escapeHtml(item.desc || 'لا يوجد وصف خاص بها.')}</p>
-
-                            <div class="flex flex-wrap gap-2 mb-6">
-                                <span class="text-[11px] bg-slate-900/90 text-slate-300 px-2.5 py-1 rounded border border-slate-800">
-                                    <i class="fa-solid fa-microchip ml-1 text-slate-400"></i>${item.arch}
-                                </span>
-                                <span class="text-[11px] bg-slate-900/90 text-slate-300 px-2.5 py-1 rounded border border-slate-800">
-                                    <i class="fa-solid fa-hard-drive ml-1 text-slate-400"></i>${item.size}
-                                </span>
-                            </div>
-                        </div>
-
-                        <div class="pt-4 border-t border-slate-800/80 space-y-2">
-                            ${item.active ? `
-                                <a href="${item.mainUrl}" onclick="trackDownload(${item.id})" target="_blank" class="w-full bg-win-accent hover:bg-win-hover text-white py-2.5 px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20 transition">
-                                    <i class="fa-solid fa-download"></i> تحميل مباشر ISO
-                                </a>
-                                ${item.mirrorUrl ? `
-                                    <a href="${item.mirrorUrl}" onclick="trackDownload(${item.id})" target="_blank" class="w-full bg-slate-800/80 hover:bg-slate-700 text-slate-300 py-2 px-4 rounded-xl font-semibold text-xs flex items-center justify-center gap-2 transition border border-slate-700/60">
-                                        <i class="fa-solid fa-link"></i> سيرفر بديل (Mirror)
-                                    </a>
-                                ` : ''}
-                            ` : `
-                                <button disabled class="w-full bg-slate-800 text-slate-500 py-2.5 px-4 rounded-xl font-bold text-sm cursor-not-allowed">
-                                    <i class="fa-solid fa-ban ml-1"></i> التحميل غير متاح حالياً
-                                </button>
-                            `}
-                        </div>
-                    `;
-                    grid.appendChild(card);
-                });
-            }
-        }
-
-        // Track and Increment Download Count
-        function trackDownload(id) {
-            const item = versions.find(v => v.id === id);
-            if (item) {
-                item.downloads += 1;
-                saveData();
-                renderCards();
-            }
-        }
-
-        // Filter Function
-        function filterVersions() {
-            renderCards();
-        }
-
-        // Check Admin Auth
-        function checkAdminAuth() {
-            const pass = document.getElementById('adminPassword').value;
-            const err = document.getElementById('authError');
-            
-            // Password is "admin"
-            if (pass === 'achraf') {
-                isAdminLoggedIn = true;
-                err.classList.add('hidden');
-                document.getElementById('adminAuthModal').classList.add('hidden');
-                document.getElementById('adminDashboard').classList.remove('hidden');
-                renderAdminTable();
-                showToast("تم تسجيل الدخول بنجاح", "success");
-            } else {
-                err.classList.remove('hidden');
-            }
-        }
-
-        // Admin Logout
-        function adminLogout() {
-            isAdminLoggedIn = false;
-            document.getElementById('adminPassword').value = '';
-            document.getElementById('adminAuthModal').classList.remove('hidden');
-            document.getElementById('adminDashboard').classList.add('hidden');
-            showToast("تم تسجيل الخروج", "info");
-        }
-
-        // Update Dashboard Statistics
-        function updateStats() {
-            document.getElementById('statTotalVersions').innerText = versions.length;
-            const totalDl = versions.reduce((acc, curr) => acc + (curr.downloads || 0), 0);
-            document.getElementById('statTotalDownloads').innerText = totalDl.toLocaleString();
-            const activeLinks = versions.filter(v => v.active).length;
-            document.getElementById('statActiveLinks').innerText = activeLinks;
-        }
-
-        // Render Admin Table
-        function renderAdminTable() {
-            const tbody = document.getElementById('adminTableBody');
-            tbody.innerHTML = '';
-
-            versions.forEach(item => {
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-800/40 transition";
-                tr.innerHTML = `
-                    <td class="py-3.5 px-4 font-bold text-white">${escapeHtml(item.title)}</td>
-                    <td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-xs bg-slate-800 border border-slate-700">${item.category}</span></td>
-                    <td class="py-3.5 px-4 text-xs">${item.arch}</td>
-                    <td class="py-3.5 px-4 text-xs font-mono">${item.size}</td>
-                    <td class="py-3.5 px-4 text-xs font-bold text-win-light">${item.downloads.toLocaleString()}</td>
-                    <td class="py-3.5 px-4">
-                        <button onclick="toggleActive(${item.id})" class="px-2.5 py-1 rounded-full text-xs font-semibold ${item.active ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30' : 'bg-rose-500/10 text-rose-400 border border-rose-500/30'}">
-                            ${item.active ? 'نشط' : 'معطل'}
-                        </button>
-                    </td>
-                    <td class="py-3.5 px-4 text-center">
-                        <div class="flex items-center justify-center gap-2">
-                            <button onclick="openEditModal(${item.id})" title="تعديل" class="w-8 h-8 rounded-lg bg-blue-600/20 hover:bg-blue-600/40 text-win-light flex items-center justify-center transition">
-                                <i class="fa-solid fa-pen-to-square"></i>
-                            </button>
-                            <button onclick="deleteVersion(${item.id})" title="حذف" class="w-8 h-8 rounded-lg bg-rose-600/20 hover:bg-rose-600/40 text-rose-400 flex items-center justify-center transition">
-                                <i class="fa-solid fa-trash"></i>
-                            </button>
-                        </div>
-                    </td>
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12 bg-slate-900/50 rounded-2xl border border-slate-800">
+                        <i class="fa-solid fa-box-open text-4xl text-slate-600 mb-2"></i>
+                        <p class="text-slate-400 font-bold">لا توجد نسخ متاحة حالياً</p>
+                    </div>
                 `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // Toggle Version Active State
-        function toggleActive(id) {
-            const item = versions.find(v => v.id === id);
-            if (item) {
-                item.active = !item.active;
-                saveData();
-                renderAdminTable();
-                showToast("تم تحديث حالة الرابط", "info");
-            }
-        }
-
-        // Modal Controllers
-        function openAddModal() {
-            document.getElementById('modalTitle').innerText = "إضافة نسخة ويندوز جديدة";
-            document.getElementById('versionForm').reset();
-            document.getElementById('editId').value = "";
-            document.getElementById('versionModal').classList.remove('hidden');
-        }
-
-        function openEditModal(id) {
-            const item = versions.find(v => v.id === id);
-            if (!item) return;
-
-            document.getElementById('modalTitle').innerText = "تعديل بيانات النسخة";
-            document.getElementById('editId').value = item.id;
-            document.getElementById('formTitle').value = item.title;
-            document.getElementById('formCategory').value = item.category;
-            document.getElementById('formArch').value = item.arch;
-            document.getElementById('formSize').value = item.size;
-            document.getElementById('formDesc').value = item.desc || "";
-            document.getElementById('formMainUrl').value = item.mainUrl;
-            document.getElementById('formMirrorUrl').value = item.mirrorUrl || "";
-            document.getElementById('formActive').checked = item.active;
-
-            document.getElementById('versionModal').classList.remove('hidden');
-        }
-
-        function closeModal() {
-            document.getElementById('versionModal').classList.add('hidden');
-        }
-
-        // Form Submission
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            
-            const idVal = document.getElementById('editId').value;
-            const title = document.getElementById('formTitle').value;
-            const category = document.getElementById('formCategory').value;
-            const arch = document.getElementById('formArch').value;
-            const size = document.getElementById('formSize').value;
-            const desc = document.getElementById('formDesc').value;
-            const mainUrl = document.getElementById('formMainUrl').value;
-            const mirrorUrl = document.getElementById('formMirrorUrl').value;
-            const active = document.getElementById('formActive').checked;
-
-            if (idVal) {
-                // Update existing
-                const index = versions.findIndex(v => v.id == idVal);
-                if (index !== -1) {
-                    versions[index] = {
-                        ...versions[index],
-                        title, category, arch, size, desc, mainUrl, mirrorUrl, active
-                    };
-                    showToast("تم تحديث النسخة بنجاح", "success");
-                }
-            } else {
-                // Create new
-                const newVersion = {
-                    id: Date.now(),
-                    title, category, arch, size, desc, mainUrl, mirrorUrl, active,
-                    downloads: 0,
-                    date: new Date().toISOString().split('T')[0]
-                };
-                versions.unshift(newVersion);
-                showToast("تمت إضافة النسخة بنجاح", "success");
+                return;
             }
 
-            saveData();
-            closeModal();
-            renderAdminTable();
-        }
+            container.innerHTML = filtered.map(item => `
+                <div class="bg-slate-900 border border-slate-800 hover:border-blue-500/40 transition p-6 rounded-2xl flex flex-col justify-between shadow-lg">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs bg-slate-800 text-blue-400 border border-slate-700 px-3 py-1 rounded-full font-bold">
+                                ${item.category}
+                            </span>
+                            <span class="text-xs text-slate-400">
+                                <i class="fa-solid fa-hard-drive ml-1"></i>${item.size}
+                            </span>
+                        </div>
+                        
+                        <h3 class="text-lg font-bold text-white mb-2">${item.title}</h3>
+                        <p class="text-xs text-slate-400 leading-relaxed mb-4 line-clamp-2">${item.desc || 'نسخة ويندوز رسمية أصلية.'}</p>
+                        
+                        <div class="mb-4">
+                            <span class="text-[11px] bg-slate-950 text-slate-300 px-2.5 py-1 rounded border border-slate-800">
+                                النواة: ${item.arch}
+                            </span>
+                        </div>
+                    </div>
 
-        // Delete Entry
-        function deleteVersion(id) {
-            if (confirm("هل أنت أصلًا متأكد من حذف هذه النسخة نهائياً؟")) {
-                versions = versions.filter(v => v.id !== id);
-                saveData();
-                renderAdminTable();
-                showToast("تم حذف النسخة", "info");
-            }
-        }
-
-        // Helper: Toast Notifications
-        function showToast(msg, type = "success") {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toastMessage');
-            const toastIcon = document.getElementById('toastIcon');
-
-            toastMsg.innerText = msg;
-
-            if (type === 'success') {
-                toastIcon.className = "fa-solid fa-circle-check text-emerald-400 text-lg";
-            } else if (type === 'info') {
-                toastIcon.className = "fa-solid fa-circle-info text-win-light text-lg";
-            }
-
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            
-            setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
-        }
-
-        // Helper: Utility HTML Escaper
-        function escapeHtml(str) {
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+                    <div class="space-y-2 pt-4 border-t border-slate-800">
+                        <a href="${item.mainUrl}" target="_blank" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition">
+                            <i class="fa-solid fa-download"></i> رابط تحميل مباشر ISO
+                        </a>
+                        ${item.mirrorUrl ? `
+                            <a href="${item.mirrorUrl}" target="_blank" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold py-1.5 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition">
+                                <i class="fa-solid fa-link"></i> سيرفر بديل
+                            </a>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
         }
     </script>
 </body>

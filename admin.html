@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم المشرف</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font: Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Firebase SDK (v8 Compatible) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <!-- Firebase Config File -->
+    <script src="firebase-config.js"></script>
+
+    <style>
+        body { font-family: 'Cairo', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+    <!-- Auth Login Box (Shown by default) -->
+    <div id="loginSection" class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 p-8 rounded-2xl max-w-sm w-full shadow-2xl text-center">
+            <div class="w-14 h-14 bg-blue-600/20 text-blue-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-blue-500/30">
+                <i class="fa-solid fa-user-gear text-2xl"></i>
+            </div>
+            <h2 class="text-xl font-bold text-white mb-1">دخول المشرف</h2>
+            <p class="text-xs text-slate-400 mb-6">أدخل كلمة المرور لإدارة بيانات Firebase</p>
+
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <input type="password" id="adminPass" placeholder="كلمة المرور" class="w-full bg-slate-950 border border-slate-800 rounded-lg py-2.5 px-4 text-center text-sm text-white focus:outline-none focus:border-blue-500">
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-lg text-sm transition">
+                    تسجيل الدخول
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Panel Dashboard (Hidden until login) -->
+    <div id="dashboardSection" class="hidden">
+        <!-- Top Nav -->
+        <header class="border-b border-slate-800 bg-slate-900">
+            <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-blue-500 text-lg"></i>
+                    <h1 class="font-bold text-white text-lg">لوحة إحصائيات وإدارة النسخ</h1>
+                </div>
+                <div class="flex items-center gap-3">
+                    <a href="index.html" class="text-xs text-slate-400 hover:text-white border border-slate-800 px-3 py-1.5 rounded-lg">
+                        <i class="fa-solid fa-eye ml-1"></i> المعاينة الزوار
+                    </a>
+                    <button onclick="logout()" class="text-xs bg-rose-900/40 text-rose-300 border border-rose-700/40 px-3 py-1.5 rounded-lg hover:bg-rose-800/40">
+                        خروج
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4 py-8 space-y-8">
+            <!-- Form Section -->
+            <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-xl">
+                <h3 id="formTitle" class="text-base font-bold text-white mb-4 pb-3 border-b border-slate-800">إضافة نسخة جديدة إلى Firebase</h3>
+                
+                <form id="versionForm" onsubmit="saveVersion(event)" class="space-y-4">
+                    <input type="hidden" id="editKey">
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">عنوان النسخة والإصدار *</label>
+                            <input type="text" id="itemTitle" required placeholder="مثال: Windows 11 Pro 23H2" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:border-blue-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">نوع النسخة (الفئة) *</label>
+                            <select id="itemCategory" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:border-blue-500 outline-none">
+                                <option value="Windows 11">Windows 11</option>
+                                <option value="Windows 10">Windows 10</option>
+                                <option value="Windows 7">Windows 7</option>
+                                <option value="Windows Server">Windows Server</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">المعمارية (النواة) *</label>
+                            <select id="itemArch" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:border-blue-500 outline-none">
+                                <option value="64-bit">64-bit</option>
+                                <option value="32-bit">32-bit</option>
+                                <option value="ARM64">ARM64</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">حجم الملف *</label>
+                            <input type="text" id="itemSize" required placeholder="مثال: 5.4 GB" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:border-blue-500 outline-none">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs text-slate-400 mb-1">وصف قصير</label>
+                        <textarea id="itemDesc" rows="2" placeholder="وصف مقتضب للنسخة..." class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:border-blue-500 outline-none"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">رابط التحميل المباشر الرئيسي (ISO) *</label>
+                            <input type="url" id="itemMainUrl" required placeholder="https://..." dir="ltr" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:border-blue-500 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs text-slate-400 mb-1">رابط سيرفر بديل (اختياري)</label>
+                            <input type="url" id="itemMirrorUrl" placeholder="https://..." dir="ltr" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:border-blue-500 outline-none">
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end gap-3 pt-2">
+                        <button type="button" onclick="resetForm()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs px-4 py-2 rounded-lg font-semibold">إلغاء</button>
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white text-xs px-6 py-2 rounded-lg font-bold shadow-lg">حفظ البيانات</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Manage Table Section -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+                <div class="p-4 border-b border-slate-800 font-bold text-sm text-slate-200">النسخ الحالية المُسجلة في السيرفر</div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-right text-xs">
+                        <thead class="bg-slate-950 text-slate-400 border-b border-slate-800">
+                            <tr>
+                                <th class="p-3">العنوان</th>
+                                <th class="p-3">الفئة</th>
+                                <th class="p-3">النواة</th>
+                                <th class="p-3">الحجم</th>
+                                <th class="p-3 text-center">الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTableBody" class="divide-y divide-slate-800/60 text-slate-300">
+                            <!-- Dynamic Content -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Admin Scripting -->
+    <script>
+        let isAuth = false;
+        let versionsMap = {};
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const pass = document.getElementById('adminPass').value;
+            // كلمة المرور الافتراضية
+            if (pass === 'admin123') {
+                isAuth = true;
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('dashboardSection').classList.remove('hidden');
+                listenToData();
+            } else {
+                alert("كلمة المرور غير صحيحة!");
+            }
+        }
+
+        function logout() {
+            isAuth = false;
+            document.getElementById('loginSection').classList.remove('hidden');
+            document.getElementById('dashboardSection').classList.add('hidden');
+        }
+
+        function listenToData() {
+            db.ref('windows_versions').on('value', (snapshot) => {
+                versionsMap = snapshot.val() || {};
+                renderAdminTable();
+            });
+        }
+
+        function renderAdminTable() {
+            const tbody = document.getElementById('adminTableBody');
+            const keys = Object.keys(versionsMap);
+
+            if (keys.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="text-center p-6 text-slate-500">لا يوجد أي نسخ بعد. قم بإضافة أول نسخة من النموذج أعلاه.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = keys.map(key => {
+                const item = versionsMap[key];
+                return `
+                    <tr class="hover:bg-slate-800/40">
+                        <td class="p-3 font-bold text-white">${item.title}</td>
+                        <td class="p-3"><span class="bg-slate-800 border border-slate-700 px-2 py-0.5 rounded text-[10px]">${item.category}</span></td>
+                        <td class="p-3">${item.arch}</td>
+                        <td class="p-3">${item.size}</td>
+                        <td class="p-3 text-center">
+                            <button onclick="editItem('${key}')" class="bg-blue-600/20 text-blue-400 p-1.5 rounded ml-1 hover:bg-blue-600/40"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteItem('${key}')" class="bg-rose-600/20 text-rose-400 p-1.5 rounded hover:bg-rose-600/40"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function saveVersion(e) {
+            e.preventDefault();
+            const editKey = document.getElementById('editKey').value;
+            const data = {
+                title: document.getElementById('itemTitle').value,
+                category: document.getElementById('itemCategory').value,
+                arch: document.getElementById('itemArch').value,
+                size: document.getElementById('itemSize').value,
+                desc: document.getElementById('itemDesc').value,
+                mainUrl: document.getElementById('itemMainUrl').value,
+                mirrorUrl: document.getElementById('itemMirrorUrl').value
+            };
+
+            if (editKey) {
+                // التحديث
+                db.ref('windows_versions/' + editKey).update(data, (err) => {
+                    if(!err) resetForm();
+                });
+            } else {
+                // الإضافة
+                db.ref('windows_versions').push(data, (err) => {
+                    if(!err) resetForm();
+                });
+            }
+        }
+
+        function editItem(key) {
+            const item = versionsMap[key];
+            if (!item) return;
+
+            document.getElementById('editKey').value = key;
+            document.getElementById('itemTitle').value = item.title;
+            document.getElementById('itemCategory').value = item.category;
+            document.getElementById('itemArch').value = item.arch;
+            document.getElementById('itemSize').value = item.size;
+            document.getElementById('itemDesc').value = item.desc || '';
+            document.getElementById('itemMainUrl').value = item.mainUrl;
+            document.getElementById('itemMirrorUrl').value = item.mirrorUrl || '';
+
+            document.getElementById('formTitle').innerText = "تعديل النسخة: " + item.title;
+        }
+
+        function deleteItem(key) {
+            if (confirm("هل أنت متأكد من حذف هذه النسخة؟")) {
+                db.ref('windows_versions/' + key).remove();
+            }
+        }
+
+        function resetForm() {
+            document.getElementById('versionForm').reset();
+            document.getElementById('editKey').value = '';
+            document.getElementById('formTitle').innerText = "إضافة نسخة جديدة إلى Firebase";
+        }
+    </script>
+</body>
+</html>
