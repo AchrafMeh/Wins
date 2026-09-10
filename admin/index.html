@@ -17,23 +17,27 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between">
 
-    <!-- شاشة تسجيل الدخول بكلمة المرور -->
+    <!-- شاشة تسجيل الدخول بالإيميل وكلمة المرور -->
     <div id="loginScreen" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 p-6 md:p-8 rounded-2xl max-w-md w-full text-center shadow-2xl">
             <div class="w-16 h-16 rounded-2xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-3xl text-blue-500 mx-auto mb-4">
                 <i class="fa-solid fa-lock"></i>
             </div>
             <h2 class="text-2xl font-bold text-white mb-2">تسجيل الدخول للوحة التحكم</h2>
-            <p class="text-slate-400 text-xs mb-6">يرجى إدخال كلمة المرور للوصول إلى أدوات الإدارة</p>
+            <p class="text-slate-400 text-xs mb-6">يرجى إدخال البريد الإلكتروني وكلمة المرور للوصول إلى الأدوات</p>
 
             <form id="loginForm" class="space-y-4">
                 <div>
-                    <input type="password" id="passInput" placeholder="أدخل كلمة المرور..." required 
+                    <input type="email" id="emailInput" placeholder="البريد الإلكتروني..." required 
+                        class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-blue-500 text-left" dir="ltr">
+                </div>
+                <div>
+                    <input type="password" id="passInput" placeholder="كلمة المرور..." required 
                         class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-blue-500 text-center">
                 </div>
-                <p id="loginError" class="text-red-500 text-xs hidden">كلمة المرور غير صحيحة!</p>
+                <p id="loginError" class="text-red-500 text-xs hidden">بيانات الدخول غير صحيحة!</p>
                 
-                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-xl text-sm transition shadow-lg shadow-blue-600/20">
+                <button type="submit" id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-xl text-sm transition shadow-lg shadow-blue-600/20">
                     دخول
                 </button>
                 <a href="/" class="block text-xs text-slate-400 hover:text-slate-200 mt-3 transition">← العودة للرئيسية</a>
@@ -53,9 +57,14 @@
                     <p class="text-xs text-slate-400">إضافة وإدارة نسخ الويندوز</p>
                 </div>
             </div>
-            <a href="/" class="text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg border border-slate-700 transition flex items-center gap-2">
-                <i class="fa-solid fa-arrow-right"></i> العودة للرئيسية
-            </a>
+            <div class="flex items-center gap-2">
+                <button id="logoutBtn" class="text-xs font-semibold bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white px-3 py-2 rounded-lg border border-red-500/30 transition flex items-center gap-1">
+                    <i class="fa-solid fa-right-from-bracket"></i> خروج
+                </button>
+                <a href="/" class="text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-lg border border-slate-700 transition flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-right"></i> الرئيسية
+                </a>
+            </div>
         </div>
     </header>
 
@@ -133,37 +142,56 @@
 
     <!-- Firebase Script Logic -->
     <script type="module">
-        import { db, ref, push, onValue, remove } from './firebase-config.js';
-
-        // عين كلمة المرور الخاصة بك هنا
-        const ADMIN_PASS = "admin123"; 
+        import { db, ref, push, onValue, remove, auth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from './firebase-config.js';
 
         const loginScreen = document.getElementById('loginScreen');
         const loginForm = document.getElementById('loginForm');
+        const emailInput = document.getElementById('emailInput');
         const passInput = document.getElementById('passInput');
         const loginError = document.getElementById('loginError');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
 
-        // التحقق من حالة الجلسة المسبقة
-        if (sessionStorage.getItem('adminAuth') === 'true') {
-            loginScreen.classList.add('hidden');
-        }
-
-        // تسجيل الدخول
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (passInput.value === ADMIN_PASS) {
-                sessionStorage.setItem('adminAuth', 'true');
+        // مراقبة حالة تسجيل الدخول تلقائياً
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
                 loginScreen.classList.add('hidden');
             } else {
-                loginError.classList.remove('hidden');
+                loginScreen.classList.remove('hidden');
             }
+        });
+
+        // تسجيل الدخول بالإيميل وكلمة المرور عبر Firebase Auth
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            loginError.classList.add('hidden');
+            loginBtn.disabled = true;
+            loginBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري التحقق...';
+
+            signInWithEmailAndPassword(auth, emailInput.value.trim(), passInput.value)
+                .then(() => {
+                    loginForm.reset();
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'دخول';
+                })
+                .catch((err) => {
+                    loginError.textContent = 'خطأ في البريد أو كلمة المرور!';
+                    loginError.classList.remove('hidden');
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'دخول';
+                });
+        });
+
+        // تسجيل الخروج
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth);
         });
 
         const form = document.getElementById('addForm');
         const adminList = document.getElementById('adminList');
         const submitBtn = document.getElementById('submitBtn');
 
-        // إضافة نسخة جديدة
+        // إضافة نسخة جديدة (تستخدم نفس قاعدة البيانات الحالية)
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
@@ -188,7 +216,7 @@
             });
         });
 
-        // قراءة البيانات وعرضها
+        // قراءة البيانات من نفس المسار 'windows'
         onValue(ref(db, 'windows'), (snapshot) => {
             adminList.innerHTML = '';
             const data = snapshot.val();
