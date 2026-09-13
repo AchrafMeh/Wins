@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم - إدارة النسخ</title>
+    <title>لوحة التحكم - متوسطة محمد خيذر</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -20,41 +20,41 @@
     <!-- شاشة تسجيل الدخول -->
     <div id="loginScreen" class="fixed inset-0 bg-slate-950 z-50 flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 p-6 md:p-8 rounded-2xl max-w-md w-full text-center shadow-2xl">
-            <div class="w-16 h-16 rounded-2xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-3xl text-blue-500 mx-auto mb-4">
-                <i class="fa-solid fa-lock"></i>
+            <div class="w-16 h-16 rounded-2xl bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-3xl text-emerald-500 mx-auto mb-4">
+                <i class="fa-solid fa-user-shield"></i>
             </div>
-            <h2 class="text-2xl font-bold text-white mb-2">تسجيل الدخول للوحة التحكم</h2>
-            <p class="text-slate-400 text-xs mb-6">أدخل البريد الإلكتروني وكلمة المرور للوصول إلى أدوات الإدارة</p>
+            <h2 class="text-2xl font-bold text-white mb-2">لوحة إدارة المتوسطة</h2>
+            <p class="text-slate-400 text-xs mb-6">تسجيل الدخول للوصول إلى صلاحيات نشر الأخبار والتعديل</p>
 
             <form id="loginForm" class="space-y-4">
                 <div>
                     <input type="email" id="emailInput" placeholder="البريد الإلكتروني..." required 
-                        class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-blue-500 text-left" dir="ltr">
+                        class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 text-left" dir="ltr">
                 </div>
                 <div>
                     <input type="password" id="passInput" placeholder="كلمة المرور..." required 
-                        class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-blue-500 text-center">
+                        class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 text-center">
                 </div>
                 <p id="loginError" class="text-red-500 text-xs hidden">البريد الإلكتروني أو كلمة المرور غير صحيحة!</p>
                 
-                <button type="submit" id="loginBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-xl text-sm transition shadow-lg shadow-blue-600/20">
+                <button type="submit" id="loginBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20">
                     دخول
                 </button>
-                <a href="/" class="block text-xs text-slate-400 hover:text-slate-200 mt-3 transition">← العودة للرئيسية</a>
+                <a href="/" class="block text-xs text-slate-400 hover:text-slate-200 mt-3 transition">← العودة للموقع الرئيسي</a>
             </form>
         </div>
     </div>
 
     <!-- Header Navigation -->
     <header class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-40 backdrop-blur-md">
-        <div class="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-xl shadow-lg shadow-blue-500/30">
+                <div class="w-10 h-10 rounded-xl bg-emerald-600 flex items-center justify-center text-xl shadow-lg shadow-emerald-500/30">
                     <i class="fa-solid fa-sliders text-white"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold text-white">لوحة التحكم</h1>
-                    <p class="text-xs text-slate-400">إضافة وإدارة نسخ الويندوز</p>
+                    <h1 class="text-xl font-bold text-white">لوحة التحكم المطلقة</h1>
+                    <p class="text-xs text-slate-400">متوسطة محمد خيذر - طولقة</p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
@@ -69,66 +69,104 @@
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-4xl mx-auto px-4 py-8 flex-grow w-full space-y-8">
+    <main class="max-w-5xl mx-auto px-4 py-8 flex-grow w-full space-y-8">
 
-        <!-- Form Box -->
+        <!-- 1️⃣ التحكم في الشريط العاجل -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+            <h3 class="text-md font-bold text-amber-400 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-bullhorn"></i> التحكم في الشريط العاجل/التنبيهات الهامة
+            </h3>
+            <div class="flex flex-col md:flex-row gap-4 items-center">
+                <input type="text" id="urgentTextInput" placeholder="أكتب نص التنبيه العاجل هنا..." class="flex-grow w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-amber-500">
+                <div class="flex gap-2 w-full md:w-auto">
+                    <button id="saveUrgentBtn" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs transition flex-grow md:flex-grow-0 whitespace-nowrap">
+                        تحديث ونشر التنبيه
+                    </button>
+                    <button id="disableUrgentBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 px-4 py-2.5 rounded-xl text-xs transition whitespace-nowrap">
+                        إخفاء التنبيه
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2️⃣ نموذج إضافة / تعديل منشور -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl">
-            <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                <i class="fa-solid fa-plus-circle text-blue-500"></i> إضافة نسخة جديدة
+            <h2 id="formTitle" class="text-xl font-bold text-white mb-6 flex items-center gap-2">
+                <i class="fa-solid fa-plus-circle text-emerald-500"></i> نشر خبر أو إعلان جديد
             </h2>
 
-            <form id="addForm" class="space-y-4">
+            <form id="postForm" class="space-y-4">
+                <input type="hidden" id="editingId" value="">
+
                 <div>
-                    <label class="block text-xs text-slate-400 mb-2">اسم النسخة:</label>
-                    <input type="text" id="winName" placeholder="مثال: Windows 11 Pro 23H2" required 
-                        class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+                    <label class="block text-xs text-slate-400 mb-2">عنوان الخبر / الإعلان:</label>
+                    <input type="text" id="postTitle" placeholder="مثال: برنامج امتحانات الفصل الثاني للسنة الثالثة متوسط" required 
+                        class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-emerald-500">
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs text-slate-400 mb-2">المعمارية (النواة):</label>
-                        <select id="winArch" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
-                            <option value="x64">x64</option>
-                            <option value="x86">x86 (32-bit)</option>
-                            <option value="ARM64">ARM64</option>
+                        <label class="block text-xs text-slate-400 mb-2">القسم / الفئة:</label>
+                        <select id="postCategory" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-emerald-500">
+                            <!-- سيتم ملؤها ديناميكياً -->
                         </select>
                     </div>
 
                     <div>
-                        <label class="block text-xs text-slate-400 mb-2">حجم الملف:</label>
-                        <input type="text" id="winSize" placeholder="مثال: 4.5 GB" required 
-                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500">
+                        <label class="block text-xs text-slate-400 mb-2">رابط مرفق أو صورة (اختياري):</label>
+                        <input type="url" id="postUrl" placeholder="https://drive.google.com/..." 
+                            class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-emerald-500 text-left" dir="ltr">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs text-slate-400 mb-2">رابط التحميل المباشر:</label>
-                    <input type="url" id="winUrl" placeholder="https://..." required 
-                        class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500 text-left" dir="ltr">
+                    <label class="block text-xs text-slate-400 mb-2">تفاصيل الخبر / التفاصيل الكاملة:</label>
+                    <textarea id="postDesc" rows="4" placeholder="أكتب التفاصيل والشروط هنا..." required
+                        class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-emerald-500"></textarea>
                 </div>
 
-                <div>
-                    <label class="block text-xs text-slate-400 mb-2">وصف النسخة:</label>
-                    <textarea id="winDesc" rows="3" placeholder="ملاحظات، متطلبات تشغيل..." 
-                        class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500"></textarea>
+                <div class="flex items-center gap-2 py-1">
+                    <input type="checkbox" id="postImportant" class="w-4 h-4 rounded accent-amber-500">
+                    <label for="postImportant" class="text-xs text-amber-400 font-bold">تثبيت كـ "خبر هام" في الأعلام العلوية</label>
                 </div>
 
-                <button type="submit" id="submitBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-4 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-blue-600/20">
-                    <i class="fa-solid fa-floppy-disk"></i> حفظ وإضافة النسخة
-                </button>
+                <div class="flex gap-3">
+                    <button type="submit" id="submitBtn" class="flex-grow bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-lg shadow-emerald-600/20">
+                        <i class="fa-solid fa-paper-plane"></i> <span id="submitBtnText">حفظ ونشر</span>
+                    </button>
+                    <button type="button" id="cancelEditBtn" class="hidden bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-3 px-4 rounded-xl text-sm transition">
+                        إلغاء التعديل
+                    </button>
+                </div>
             </form>
         </div>
 
-        <!-- List Section -->
+        <!-- 3️⃣ إدارة أقسام وفئات الموقع -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+            <h3 class="text-md font-bold text-white mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-layer-group text-emerald-500"></i> إدارة فئات الأخبار (إضافة / إزالة فئة)
+            </h3>
+            <div class="flex gap-2 mb-4">
+                <input type="text" id="newCatInput" placeholder="اسم الفئة الجديدة (مثال: رحلات مدرسية)..." class="flex-grow bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-sm text-slate-200 focus:outline-none focus:border-emerald-500">
+                <button id="addCatBtn" class="bg-slate-800 hover:bg-slate-700 text-emerald-400 border border-emerald-500/30 px-4 py-2 rounded-xl text-xs font-bold transition">
+                    + إضافة
+                </button>
+            </div>
+            <div id="categoriesList" class="flex flex-wrap gap-2">
+                <!-- سيتم ملؤها بالحذف والتعديل -->
+            </div>
+        </div>
+
+        <!-- 4️⃣ قائمة المشاركات الحالية (تعديل وحذف) -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl">
             <h2 class="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                <i class="fa-solid fa-list text-blue-500"></i> النسخ المتاحة حالياً
+                <i class="fa-solid fa-list text-emerald-500"></i> الأخبار والمشاركات المنشورة
             </h2>
 
             <div id="adminList" class="space-y-3">
                 <div class="text-center py-8 text-slate-500">
-                    <i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-blue-500"></i>
-                    <p class="text-xs">جاري التحميل...</p>
+                    <i class="fa-solid fa-spinner fa-spin text-2xl mb-2 text-emerald-500"></i>
+                    <p class="text-xs">جاري جلب المنشورات...</p>
                 </div>
             </div>
         </div>
@@ -137,18 +175,15 @@
 
     <!-- Footer -->
     <footer class="border-t border-slate-900 py-6 text-center text-xs text-slate-500">
-        جميع الحقوق محفوظة &copy; 2026 - لوحة تحكم إدارة الويندوز
+        جميع الحقوق محفوظة &copy; 2026 - لوحة تحكم متوسطة محمد خيذر
     </footer>
 
     <!-- Firebase Script Logic -->
     <script type="module">
-        import { db, auth, ref, push, onValue, remove } from './firebase-config.js';
-        import { 
-            signInWithEmailAndPassword, 
-            onAuthStateChanged, 
-            signOut 
-        } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { db, auth, ref, push, set, update, onValue, remove } from './firebase-config.js';
+        import { signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
+        // العناصر
         const loginScreen = document.getElementById('loginScreen');
         const loginForm = document.getElementById('loginForm');
         const emailInput = document.getElementById('emailInput');
@@ -157,21 +192,32 @@
         const loginBtn = document.getElementById('loginBtn');
         const logoutBtn = document.getElementById('logoutBtn');
 
-        const form = document.getElementById('addForm');
+        const postForm = document.getElementById('postForm');
+        const editingId = document.getElementById('editingId');
+        const formTitle = document.getElementById('formTitle');
+        const submitBtnText = document.getElementById('submitBtnText');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+        const postCategory = document.getElementById('postCategory');
         const adminList = document.getElementById('adminList');
-        const submitBtn = document.getElementById('submitBtn');
 
-        let unsubscribeOnValue = null;
+        const urgentTextInput = document.getElementById('urgentTextInput');
+        const saveUrgentBtn = document.getElementById('saveUrgentBtn');
+        const disableUrgentBtn = document.getElementById('disableUrgentBtn');
+
+        const newCatInput = document.getElementById('newCatInput');
+        const addCatBtn = document.getElementById('addCatBtn');
+        const categoriesList = document.getElementById('categoriesList');
+
+        let defaultCategories = ['أخبار عامة', 'فروض واختبارات', 'إعلانات إدارية', 'نشاطات'];
+        let rawNewsData = {};
 
         // مراقبة حالة تسجيل الدخول
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 loginScreen.classList.add('hidden');
-                // جلب البيانات فور تأكيد تسجيل الدخول
-                loadWindowsData();
+                initData();
             } else {
                 loginScreen.classList.remove('hidden');
-                if (unsubscribeOnValue) unsubscribeOnValue();
             }
         });
 
@@ -186,8 +232,7 @@
                 await signInWithEmailAndPassword(auth, emailInput.value.trim(), passInput.value);
                 loginForm.reset();
             } catch (error) {
-                console.error("Auth error:", error);
-                loginError.textContent = "البريد الإلكتروني أو كلمة المرور غير صحيحة";
+                loginError.textContent = "بيانات الدخول غير صحيحة";
                 loginError.classList.remove('hidden');
             } finally {
                 loginBtn.disabled = false;
@@ -195,107 +240,171 @@
             }
         });
 
-        // تسجيل الخروج
-        logoutBtn.addEventListener('click', () => {
-            signOut(auth);
-        });
+        logoutBtn.addEventListener('click', () => signOut(auth));
 
-        // إضافة نسخة جديدة
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الحفظ...';
-
-            try {
-                await push(ref(db, 'windows'), {
-                    name: document.getElementById('winName').value.trim(),
-                    arch: document.getElementById('winArch').value,
-                    size: document.getElementById('winSize').value.trim(),
-                    url: document.getElementById('winUrl').value.trim(),
-                    desc: document.getElementById('winDesc').value.trim(),
-                    createdAt: Date.now()
-                });
-                form.reset();
-            } catch (err) {
-                alert('حدث خطأ أثناء الحفظ: ' + err.message);
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> حفظ وإضافة النسخة';
-            }
-        });
-
-        // دالة قراءة البيانات المربوطة بالحساب
-        function loadWindowsData() {
-            unsubscribeOnValue = onValue(ref(db, 'windows'), (snapshot) => {
-                adminList.innerHTML = '';
+        function initData() {
+            // جلب الفئات
+            onValue(ref(db, 'categories'), (snapshot) => {
                 const data = snapshot.val();
+                let cats = data ? Object.values(data) : defaultCategories;
+                renderCategoriesAdmin(cats);
+            });
 
-                if (!data) {
-                    adminList.innerHTML = `
-                        <div class="text-center py-8 text-slate-500 bg-slate-950/50 rounded-xl border border-slate-800">
-                            <i class="fa-solid fa-folder-open text-3xl mb-2 text-slate-600"></i>
-                            <p class="text-xs">لا توجد نسخ مضافة حالياً.</p>
-                        </div>
-                    `;
-                    return;
-                }
+            // جلب الأخبار
+            onValue(ref(db, 'windows'), (snapshot) => {
+                rawNewsData = snapshot.val() || {};
+                renderAdminList();
+            });
 
-                const fragment = document.createDocumentFragment();
-
-                Object.keys(data).forEach(id => {
-                    const win = data[id];
-                    const item = document.createElement('div');
-                    item.className = 'bg-slate-950 border border-slate-800 p-4 rounded-xl flex items-center justify-between gap-4 hover:border-slate-700 transition';
-
-                    item.innerHTML = `
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-lg bg-slate-900 border border-slate-800 flex items-center justify-center text-blue-400">
-                                <i class="fa-brands fa-windows"></i>
-                            </div>
-                            <div>
-                                <h4 class="text-sm font-bold text-white">${escapeHtml(win.name)}</h4>
-                                <div class="flex gap-2 text-[11px] text-slate-400 mt-0.5">
-                                    <span class="bg-slate-900 border border-slate-800 px-2 py-0.5 rounded text-blue-400 font-semibold">${escapeHtml(win.arch)}</span>
-                                    <span><i class="fa-solid fa-hard-drive ml-1"></i>${escapeHtml(win.size)}</span>
-                                </div>
-                            </div>
-                        </div>
-                        <button class="btn-del bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white border border-red-500/30 px-3 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1" data-id="${id}">
-                            <i class="fa-solid fa-trash-can"></i> حذف
-                        </button>
-                    `;
-                    fragment.appendChild(item);
-                });
-
-                adminList.appendChild(fragment);
-            }, (error) => {
-                console.error("Database Read Error:", error);
-                adminList.innerHTML = `<p class="text-red-500 text-xs text-center">خطأ في قراءة البيانات: ${error.message}</p>`;
+            // جلب العاجل
+            onValue(ref(db, 'settings/urgentNews'), (snapshot) => {
+                const urgent = snapshot.val();
+                if (urgent) urgentTextInput.value = urgent.text || '';
             });
         }
 
-        // حذف العناصر
-        adminList.addEventListener('click', (e) => {
-            const btn = e.target.closest('.btn-del');
-            if (btn) {
-                const id = btn.getAttribute('data-id');
-                if (confirm('هل أنت تأكد من إزالة هذه النسخة؟')) {
-                    remove(ref(db, `windows/${id}`));
-                }
+        // إدارة الفئات
+        function renderCategoriesAdmin(cats) {
+            postCategory.innerHTML = cats.map(c => `<option value="${c}">${c}</option>`).join('');
+            categoriesList.innerHTML = cats.map(c => `
+                <span class="bg-slate-950 border border-slate-800 text-slate-300 text-xs px-3 py-1 rounded-lg flex items-center gap-2">
+                    ${c}
+                    <button onclick="deleteCategory('${c}')" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-xmark"></i></button>
+                </span>
+            `).join('');
+        }
+
+        addCatBtn.addEventListener('click', () => {
+            const val = newCatInput.value.trim();
+            if (val) {
+                push(ref(db, 'categories'), val);
+                newCatInput.value = '';
             }
+        });
+
+        window.deleteCategory = (catName) => {
+            onValue(ref(db, 'categories'), (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    Object.keys(data).forEach(k => {
+                        if (data[k] === catName) remove(ref(db, `categories/${k}`));
+                    });
+                }
+            }, { onlyOnce: true });
+        };
+
+        // حفظ / تعديل خبر
+        postForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = editingId.value;
+
+            const payload = {
+                name: document.getElementById('postTitle').value.trim(),
+                arch: postCategory.value,
+                url: document.getElementById('postUrl').value.trim(),
+                desc: document.getElementById('postDesc').value.trim(),
+                isImportant: document.getElementById('postImportant').checked,
+                createdAt: id ? (rawNewsData[id]?.createdAt || Date.now()) : Date.now()
+            };
+
+            if (id) {
+                await update(ref(db, `windows/${id}`), payload);
+            } else {
+                await push(ref(db, 'windows'), payload);
+            }
+
+            resetPostForm();
+        });
+
+        // إلغاء التعديل
+        cancelEditBtn.addEventListener('click', resetPostForm);
+
+        function resetPostForm() {
+            postForm.reset();
+            editingId.value = '';
+            formTitle.innerHTML = '<i class="fa-solid fa-plus-circle text-emerald-500"></i> نشر خبر أو إعلان جديد';
+            submitBtnText.textContent = 'حفظ ونشر';
+            cancelEditBtn.classList.add('hidden');
+        }
+
+        // عرض المنشورات للتحكم بها
+        function renderAdminList() {
+            adminList.innerHTML = '';
+
+            if (Object.keys(rawNewsData).length === 0) {
+                adminList.innerHTML = `<p class="text-xs text-center py-6 text-slate-500">لا توجد منشورات حالياً.</p>`;
+                return;
+            }
+
+            Object.keys(rawNewsData).forEach(id => {
+                const item = rawNewsData[id];
+                const div = document.createElement('div');
+                div.className = 'bg-slate-950 border border-slate-800 p-4 rounded-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4 hover:border-slate-700 transition';
+
+                div.innerHTML = `
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="text-[10px] bg-slate-900 text-emerald-400 px-2 py-0.5 rounded border border-slate-800 font-bold">${escapeHtml(item.arch)}</span>
+                            ${item.isImportant ? '<span class="text-[10px] bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded border border-amber-500/30">هام</span>' : ''}
+                        </div>
+                        <h4 class="text-sm font-bold text-white">${escapeHtml(item.name)}</h4>
+                        <p class="text-xs text-slate-400 line-clamp-1">${escapeHtml(item.desc)}</p>
+                    </div>
+
+                    <div class="flex items-center gap-2 w-full md:w-auto justify-end">
+                        <button onclick="editPost('${id}')" class="bg-blue-600/20 text-blue-400 hover:bg-blue-600 hover:text-white border border-blue-500/30 px-3 py-1.5 rounded-lg text-xs font-semibold transition">
+                            <i class="fa-solid fa-pen"></i> تعديل
+                        </button>
+                        <button onclick="deletePost('${id}')" class="bg-red-600/20 text-red-400 hover:bg-red-600 hover:text-white border border-red-500/30 px-3 py-1.5 rounded-lg text-xs font-semibold transition">
+                            <i class="fa-solid fa-trash"></i> حذف
+                        </button>
+                    </div>
+                `;
+                adminList.appendChild(div);
+            });
+        }
+
+        window.editPost = (id) => {
+            const item = rawNewsData[id];
+            if (!item) return;
+
+            editingId.value = id;
+            document.getElementById('postTitle').value = item.name || '';
+            postCategory.value = item.arch || '';
+            document.getElementById('postUrl').value = item.url || '';
+            document.getElementById('postDesc').value = item.desc || '';
+            document.getElementById('postImportant').checked = !!item.isImportant;
+
+            formTitle.innerHTML = '<i class="fa-solid fa-pen-to-square text-blue-500"></i> تعديل المنشور الحالي';
+            submitBtnText.textContent = 'حفظ التعديلات';
+            cancelEditBtn.classList.remove('hidden');
+            window.scrollTo({ top: 150, behavior: 'smooth' });
+        };
+
+        window.deletePost = (id) => {
+            if (confirm('هل أنت تأكد من إزالة هذا المنشور؟')) {
+                remove(ref(db, `windows/${id}`));
+            }
+        };
+
+        // التحكم في التنبيه العاجل
+        saveUrgentBtn.addEventListener('click', () => {
+            const text = urgentTextInput.value.trim();
+            if (text) {
+                set(ref(db, 'settings/urgentNews'), { text, enabled: true });
+                alert('تم نشر التنبيه العاجل بنجاح!');
+            }
+        });
+
+        disableUrgentBtn.addEventListener('click', () => {
+            set(ref(db, 'settings/urgentNews'), { text: urgentTextInput.value, enabled: false });
+            alert('تم إخفاء التنبيه العاجل.');
         });
 
         function escapeHtml(str) {
             if (!str) return '';
             return String(str).replace(/[&<>"']/g, function(m) {
-                return {
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
-                    '"': '&quot;',
-                    "'": '&#039;'
-                }[m];
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
             });
         }
     </script>
