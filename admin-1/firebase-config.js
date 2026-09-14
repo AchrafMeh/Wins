@@ -7,6 +7,12 @@ const firebaseConfig = {
   authDomain: "windows-d031e.firebaseapp.com",
   databaseURL: "https://windows-d031e-default-rtdb.firebaseio.com/",
   projectId: "windows-d031e",
+  storageBucket: "windows-d031e.firebasestorage.app",
+  messagingSenderId: "874765961451",
+  appId: "1:874765961451:web:87cb24b031c91744bf56ae"
+};
+
+const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
 
