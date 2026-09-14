@@ -18,9 +18,14 @@
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between">
 
     <!-- Top Alert Banner (إذا كان هناك خبر عاجل) -->
-    <div id="urgentBanner" class="hidden bg-amber-500/20 border-b border-amber-500/30 text-amber-300 py-2.5 px-4 text-center text-xs font-semibold">
-        <i class="fa-solid fa-triangle-exclamation text-amber-400 ml-2 animate-pulse"></i>
-        <span id="urgentText">تنبيه هام...</span>
+    <div id="urgentBanner" class="hidden bg-amber-500/20 border-b border-amber-500/30 text-amber-300 py-2.5 px-4 text-center text-xs font-semibold flex items-center justify-center gap-2 flex-wrap">
+        <div class="flex items-center gap-1">
+            <i class="fa-solid fa-triangle-exclamation text-amber-400 animate-pulse"></i>
+            <span id="urgentText">تنبيه هام...</span>
+        </div>
+        <a id="urgentLink" href="#" target="_blank" class="hidden bg-amber-500/30 hover:bg-amber-500/40 text-amber-200 border border-amber-500/40 px-2.5 py-0.5 rounded-full text-[11px] font-bold transition flex items-center gap-1">
+            <i class="fa-solid fa-link text-[10px]"></i> زيارة الرابط
+        </a>
     </div>
 
     <!-- Header Navigation -->
@@ -87,7 +92,8 @@
         import { db, ref, onValue } from './firebase-config.js';
 
         let allNews = [];
-        let categories = ['أخبار عامة', 'فروض واختبارات', 'إعلانات إدارية', 'نشاطات'];
+        let dbCategories = ['أخبار عامة', 'فروض واختبارات', 'إعلانات إدارية', 'نشاطات'];
+        let categories = [];
         let activeCategory = 'all';
 
         const container = document.getElementById('newsContainer');
@@ -95,28 +101,35 @@
         const searchInput = document.getElementById('searchInput');
         const urgentBanner = document.getElementById('urgentBanner');
         const urgentText = document.getElementById('urgentText');
+        const urgentLink = document.getElementById('urgentLink');
 
-        // جلب الإعلانات العاجلة والفئات والمشاركات
+        // 1️⃣ جلب الإعلانات العاجلة والرابط الخاص بها
         onValue(ref(db, 'settings/urgentNews'), (snapshot) => {
             const urgent = snapshot.val();
             if (urgent && urgent.enabled) {
                 urgentText.textContent = urgent.text;
+                if (urgent.url) {
+                    urgentLink.href = urgent.url;
+                    urgentLink.classList.remove('hidden');
+                } else {
+                    urgentLink.classList.add('hidden');
+                }
                 urgentBanner.classList.remove('hidden');
             } else {
                 urgentBanner.classList.add('hidden');
             }
         });
 
-        // جلب الفئات المخصصة من قاعدة البيانات إن وجدت
+        // 2️⃣ جلب الفئات المخصصة المضافة من قاعدة البيانات
         onValue(ref(db, 'categories'), (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                categories = Object.values(data);
+                dbCategories = Object.values(data);
             }
-            renderCategoryButtons();
+            updateCategoriesList();
         });
 
-        // جلب الأخبار من المسار الموحد 'windows' (أو تم تحويله هضمياً ليعمل بنفس البيانات الحالية)
+        // 3️⃣ جلب الأخبار
         onValue(ref(db, 'windows'), (snapshot) => {
             const data = snapshot.val();
             allNews = [];
@@ -125,11 +138,20 @@
                 Object.keys(data).forEach(key => {
                     allNews.push({ id: key, ...data[key] });
                 });
-                // ترتيب حسب الأحدث وحسب الأخبار الهامة
                 allNews.sort((a, b) => (b.isImportant ? 1 : 0) - (a.isImportant ? 1 : 0) || (b.createdAt || 0) - (a.createdAt || 0));
             }
+
+            updateCategoriesList();
             renderCards();
         });
+
+        function updateCategoriesList() {
+            // دمج الفئات المعرفة في النظام مع الفئات التي تحتوي منشورات مع منع التكرار
+            const newsCategories = allNews.map(item => item.arch).filter(Boolean);
+            const combined = Array.from(new Set([...dbCategories, ...newsCategories]));
+            categories = combined;
+            renderCategoryButtons();
+        }
 
         function renderCategoryButtons() {
             categoriesContainer.innerHTML = `
